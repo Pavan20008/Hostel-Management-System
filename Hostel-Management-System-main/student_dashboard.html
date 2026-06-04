@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Dashboard Specific Styles */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--light-bg);
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background-color: var(--light-bg);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dashboard-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .section {
+            display: none;
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge i {
+            font-size: 0.75rem;
+        }
+
+        .status-badge.paid {
+            background-color: #ECFDF5;
+            color: #065F46;
+        }
+
+        .status-badge.pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-badge.overdue {
+            background-color: #FEF2F2;
+            color: #991B1B;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .maintenance-list {
+            margin-top: 2rem;
+        }
+
+        .maintenance-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .maintenance-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .maintenance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .maintenance-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.125rem;
+        }
+
+        .maintenance-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .maintenance-status.pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .maintenance-status.in-progress {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .maintenance-status.completed {
+            background-color: #ECFDF5;
+            color: #065F46;
+        }
+
+        .maintenance-details {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .maintenance-date {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .notification {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-content {
+            color: var(--text-secondary);
+        }
+
+        .card-content p {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .form-actions .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-actions .btn i {
+            font-size: 0.875rem;
+        }
+
+        select:disabled,
+        input:disabled,
+        input:readonly {
+            background-color: var(--light-bg);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* User Profile */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        #welcome {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        #student-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Navigation */
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            gap: 0.75rem;
+        }
+
+        .sidebar nav ul li a:hover {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar nav ul li a i {
+            font-size: 1.125rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                margin-bottom: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span id="welcome">Welcome, <span id="student-name"></span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-section="overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#" data-section="room"><i class="fas fa-bed"></i> Room Details</a></li>
+                    <li><a href="#" data-section="fees"><i class="fas fa-money-bill"></i> Fee Status</a></li>
+                    <li><a href="#" data-section="maintenance"><i class="fas fa-tools"></i> Maintenance</a></li>
+                    <li><a href="#" data-section="medical"><i class="fas fa-heartbeat"></i> Medical Records</a></li>
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Student Dashboard</h1>
+                <div class="user-profile">
+                    <span id="header-name"></span>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="section active" id="overview-section">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Room Status</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p><strong>Room Number:</strong> <span id="overview-room">Loading...</span></p>
+                            <p><strong>Room Type:</strong> <span id="overview-type">Loading...</span></p>
+                            <button class="edit-btn" onclick="editRoomDetails()">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Fee Status</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-money-bill"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p><strong>Amount:</strong> <span id="overview-amount">Loading...</span></p>
+                            <p><strong>Status:</strong> <span id="overview-fees">Loading...</span></p>
+                            <button class="edit-btn" onclick="editFeeDetails()">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Maintenance</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p><strong>Pending Requests:</strong> <span id="overview-requests">Loading...</span></p>
+                            <p><strong>Last Request:</strong> <span id="overview-last-request">None</span></p>
+                            <button class="edit-btn" onclick="showSection('maintenance')">
+                                <i class="fas fa-plus"></i> New Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Details Section -->
+            <div class="section" id="room-section">
+                <h2 class="section-title">Room Details</h2>
+                <div class="info-card" id="room-details">
+                    <div class="info-content">
+                        <div class="card">
+                            <h2>Room Details</h2>
+                            <div class="form-group">
+                                <label for="roomNumber">Room Number:</label>
+                                <div class="input-group">
+                                    <input type="text" id="roomNumber" class="form-control" value="Not Assigned" readonly>
+                                    <button class="edit-btn" onclick="toggleRoomEdit()">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                        </div>
+                    </div>
+
+                            <div class="form-group">
+                                <label for="roomType">Room Type:</label>
+                                <select id="roomType" class="form-control">
+                                    <option value="Single">Single</option>
+                                    <option value="Double">Double</option>
+                                    <option value="Triple">Triple</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="floor">Floor:</label>
+                                <select id="floor" class="form-control">
+                                    <option value="Ground">Ground</option>
+                                    <option value="First">First</option>
+                                    <option value="Second">Second</option>
+                                    <option value="Third">Third</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="block">Block:</label>
+                                <select id="block" class="form-control">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary w-100" onclick="saveRoomChanges()">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee Status Section -->
+            <div class="section" id="fees-section">
+                <h2 class="section-title">Fee Status</h2>
+                <div class="info-card">
+                    <div class="info-header">
+                        <h3 class="info-title">Current Semester Fees</h3>
+                            </div>
+                    <div class="info-content" id="fee-details">
+                        <p><strong>Total Amount:</strong> <span id="fee-amount">Loading...</span></p>
+                        <p><strong>Due Date:</strong> <span id="fee-due-date">Loading...</span></p>
+                        <p><strong>Status:</strong> <span id="fee-status">Loading...</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+            <!-- Maintenance Section -->
+            <div class="section" id="maintenance-section">
+                <h2 class="section-title">Maintenance Requests</h2>
+                <div class="info-card">
+                    <div class="info-header">
+                        <h3 class="info-title">Submit New Request</h3>
+                    </div>
+                    <form id="maintenance-form" onsubmit="submitMaintenanceRequest(event)">
+                        <div class="form-group">
+                            <label for="request-title">Title</label>
+                            <input type="text" id="request-title" name="title" required placeholder="Brief description of the issue">
+                        </div>
+                            <div class="form-group">
+                            <label for="request-description">Description</label>
+                            <textarea id="request-description" name="description" required placeholder="Detailed description of the issue"></textarea>
+                            </div>
+                            <div class="form-group">
+                            <label for="request-priority">Priority</label>
+                            <select id="request-priority" name="priority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                </select>
+                            </div>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        </form>
+                    </div>
+
+                <div class="maintenance-list" id="maintenance-list">
+                    <!-- Maintenance requests will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Medical Records Section -->
+            <div class="section" id="medical-section">
+                <h2 class="section-title">Medical Records</h2>
+                <div class="info-card">
+                    <div class="info-content">
+                        <!-- Medical records will be added here -->
+                        <p>Medical records feature coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStudent = null;
+        let maintenanceRequests = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                window.location.replace('login.html');
+                return;
+            }
+
+            try {
+                currentStudent = JSON.parse(loggedInUser);
+                if (currentStudent.userType !== 'student') {
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Set student name
+                document.getElementById('student-name').textContent = currentStudent.name || 'Student';
+                document.getElementById('header-name').textContent = currentStudent.name || 'Student';
+
+                // Load dashboard data
+                loadDashboardData();
+
+                // Set up navigation
+                document.querySelectorAll('.sidebar a[data-section]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = e.target.closest('a').dataset.section;
+                        showSection(section);
+                    });
+                });
+
+                // Set up logout
+                document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                window.location.replace('login.html');
+            }
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load room data
+                const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+                const studentRoom = rooms.find(room => room.roomNumber === currentStudent.room);
+                
+                // Update room information
+                document.getElementById('overview-room').textContent = studentRoom ? studentRoom.roomNumber : 'Not Assigned';
+                document.getElementById('overview-type').textContent = studentRoom ? studentRoom.roomType : 'N/A';
+                document.getElementById('roomNumber').value = studentRoom ? studentRoom.roomNumber : 'Not Assigned';
+                if (studentRoom) {
+                    document.getElementById('roomType').value = studentRoom.roomType;
+                    document.getElementById('floor').value = `Floor ${Math.ceil(parseInt(studentRoom.roomNumber)/20)}`;
+                    document.getElementById('block').value = String.fromCharCode(65 + Math.floor((parseInt(studentRoom.roomNumber)-1)/25));
+                }
+
+                // Load fee data
+                const fees = JSON.parse(localStorage.getItem('fees')) || [];
+                const studentFee = fees.find(fee => fee.studentId === currentStudent.rollNumber) || {
+                    amount: '50000',
+                    dueDate: '2024-03-31',
+                    status: 'Pending'
+                };
+
+                document.getElementById('overview-amount').textContent = `₹${studentFee.amount}`;
+                document.getElementById('overview-fees').innerHTML = `<span class="status-badge ${studentFee.status.toLowerCase()}">${studentFee.status}</span>`;
+                
+                // Update fee details section
+                document.getElementById('fee-amount').textContent = `₹${studentFee.amount}`;
+                document.getElementById('fee-due-date').textContent = studentFee.dueDate;
+                document.getElementById('fee-status').innerHTML = `<span class="status-badge ${studentFee.status.toLowerCase()}">${studentFee.status}</span>`;
+
+                // Load maintenance requests
+                const requests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+                maintenanceRequests = requests.filter(req => req.studentId === currentStudent.rollNumber);
+                
+                const pendingRequests = maintenanceRequests.filter(req => req.status !== 'Completed').length;
+                document.getElementById('overview-requests').textContent = pendingRequests;
+                
+                const lastRequest = maintenanceRequests[maintenanceRequests.length - 1];
+                document.getElementById('overview-last-request').textContent = lastRequest ? 
+                    `${lastRequest.title} (${lastRequest.status})` : 'None';
+
+                // Update maintenance list
+                updateMaintenanceList();
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showNotification('Error loading dashboard data', 'error');
+            }
+        }
+
+        function updateMaintenanceList() {
+            const listContainer = document.getElementById('maintenance-list');
+            if (!listContainer) return;
+
+            if (maintenanceRequests.length === 0) {
+                listContainer.innerHTML = '<p>No maintenance requests found.</p>';
+                return;
+            }
+
+            // Sort by date, newest first
+            maintenanceRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            listContainer.innerHTML = maintenanceRequests.map(request => `
+                <div class="maintenance-item">
+                    <div class="maintenance-header">
+                        <h4 class="maintenance-title">${request.title}</h4>
+                        <span class="maintenance-status ${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span>
+                    </div>
+                    <div class="maintenance-details">${request.description}</div>
+                    <div class="maintenance-date">
+                        <strong>Priority:</strong> ${request.priority}
+                        <br>
+                        <strong>Submitted:</strong> ${new Date(request.createdAt).toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function submitMaintenanceRequest(event) {
+            event.preventDefault();
+            
+            try {
+                const formData = new FormData(event.target);
+                const request = {
+                    id: Date.now().toString(),
+                    studentId: currentStudent.rollNumber,
+                    studentName: currentStudent.name,
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    priority: formData.get('priority'),
+                    status: 'Pending',
+                    createdAt: new Date().toISOString()
+                };
+
+                // Get existing requests
+                const requests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+                requests.push(request);
+                localStorage.setItem('maintenanceRequests', JSON.stringify(requests));
+
+                // Add to activities
+                const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                activities.unshift({
+                    time: new Date().toISOString(),
+                    description: `New maintenance request: ${request.title}`,
+                    user: currentStudent.name,
+                    status: 'pending'
+                });
+                localStorage.setItem('activities', JSON.stringify(activities));
+
+                // Update local list and display
+                maintenanceRequests.push(request);
+                updateMaintenanceList();
+                
+                // Reset form
+                event.target.reset();
+                showNotification('Maintenance request submitted successfully', 'success');
+                
+                // Refresh dashboard data
+                loadDashboardData();
+            } catch (error) {
+                console.error('Error submitting maintenance request:', error);
+                showNotification('Error submitting maintenance request', 'error');
+            }
+        }
+
+        function toggleRoomEdit() {
+            const roomInput = document.getElementById('roomNumber');
+            const isReadOnly = roomInput.readOnly;
+            
+            if (isReadOnly) {
+                roomInput.readOnly = false;
+                roomInput.focus();
+                showNotification('You can now edit the room number', 'success');
+            } else {
+                roomInput.readOnly = true;
+                showNotification('Room number is now locked', 'success');
+            }
+        }
+
+        async function saveRoomChanges() {
+            try {
+                const newRoomNumber = document.getElementById('roomNumber').value;
+                const roomType = document.getElementById('roomType').value;
+                
+                // Validate room number
+                if (!newRoomNumber || newRoomNumber === 'Not Assigned') {
+                    throw new Error('Please enter a valid room number');
+                }
+
+                // Get rooms data
+                const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+                const room = rooms.find(r => r.roomNumber === newRoomNumber);
+
+                if (!room) {
+                    throw new Error('Room not found');
+                }
+
+                if (room.status === 'Maintenance') {
+                    throw new Error('This room is under maintenance');
+                }
+
+                if (room.status === 'Occupied' && room.roomNumber !== currentStudent.room) {
+                    throw new Error('This room is already occupied');
+                }
+
+                // Update student's room
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const studentIndex = users.findIndex(u => u.rollNumber === currentStudent.rollNumber);
+                
+                if (studentIndex === -1) {
+                    throw new Error('Student record not found');
+                }
+
+                // Update old room if exists
+                if (currentStudent.room) {
+                    const oldRoom = rooms.find(r => r.roomNumber === currentStudent.room);
+                    if (oldRoom) {
+                        oldRoom.status = 'Available';
+                        oldRoom.occupants = Math.max(0, oldRoom.occupants - 1);
+                    }
+                }
+
+                // Update new room
+                room.status = 'Occupied';
+                room.occupants = Math.min(room.capacity, room.occupants + 1);
+
+                // Update student record
+                users[studentIndex].room = newRoomNumber;
+                currentStudent.room = newRoomNumber;
+
+                // Save all changes
+                localStorage.setItem('rooms', JSON.stringify(rooms));
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('loggedInUser', JSON.stringify(currentStudent));
+
+                // Add to activities
+                const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                activities.unshift({
+                    time: new Date().toISOString(),
+                    description: `Room changed to ${newRoomNumber} for ${currentStudent.name}`,
+                    user: currentStudent.name,
+                    status: 'success'
+                });
+                localStorage.setItem('activities', JSON.stringify(activities));
+
+                showNotification('Room details updated successfully', 'success');
+                loadDashboardData();
+            } catch (error) {
+                showNotification(error.message || 'Error updating room details', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.replace('login.html');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.sidebar a[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        function editFeeDetails() {
+            // Show fees section with editable fields
+            showSection('fees');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary Colors */
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            
+            /* Secondary Colors */
+            --secondary-color: #64748b;
+            --secondary-dark: #475569;
+            --secondary-light: #94a3b8;
+            
+            /* Success Colors */
+            --success-color: #22c55e;
+            --success-dark: #16a34a;
+            --success-light: #86efac;
+            --success-bg: #dcfce7;
+            
+            /* Warning Colors */
+            --warning-color: #f59e0b;
+            --warning-dark: #d97706;
+            --warning-light: #fcd34d;
+            --warning-bg: #fef3c7;
+            
+            /* Danger Colors */
+            --danger-color: #ef4444;
+            --danger-dark: #dc2626;
+            --danger-light: #fca5a5;
+            --danger-bg: #fee2e2;
+            
+            /* Neutral Colors */
+            --background-primary: #ffffff;
+            --background-secondary: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--success-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Status Badge Styles */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: var(--success-bg);
+            color: var(--success-dark);
+        }
+
+        .status-badge.inactive {
+            background: var(--secondary-light);
+            color: var(--secondary-dark);
+        }
+
+        .status-badge.pending {
+            background: var(--warning-bg);
+            color: var(--warning-dark);
+        }
+
+        /* Room Status Styles */
+        .room-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .room-status.available {
+            background: var(--success-bg);
+            color: var(--success-dark);
+        }
+
+        .room-status.occupied {
+            background: var(--warning-bg);
+            color: var(--warning-dark);
+        }
+
+        .room-status.maintenance {
+            background: var(--danger-bg);
+            color: var(--danger-dark);
+        }
+
+        /* Action Button Styles */
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon.edit {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .btn-icon.edit:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-icon.delete {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+        }
+
+        .btn-icon.delete:hover {
+            background: var(--danger-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--primary-color);
+        }
+
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        /* Card Styles */
+        .dashboard-card {
+            background: var(--background-primary);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--background-primary);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--background-secondary);
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: left;
+            padding: 0.75rem 1rem;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:hover {
+            background: var(--background-secondary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: var(--background-primary);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .close-btn {
+            background: var(--background-secondary);
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 0.375rem;
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: var(--success-bg);
+            color: var(--success-dark);
+            border: 1px solid var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-bg);
+            color: var(--danger-dark);
+            border: 1px solid var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Admin Dashboard Specific Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--background-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+        }
+
+        .search-bar button {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--background-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-lg);
+        }
+
+        .page-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--background-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .bulk-actions select {
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--background-primary);
+            color: var(--text-secondary);
+        }
+
+        .bulk-actions button {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .filter-options {
+                flex-direction: column;
+            }
+
+            .bulk-actions {
+                flex-direction: column;
+            }
+        }
+
+        .status-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .status-card {
+            background: var(--background-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-value {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .room-status {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+
+        .room-status.available {
+            background-color: var(--success-color-light);
+            color: var(--success-color);
+        }
+
+        .room-status.occupied {
+            background-color: var(--warning-color-light);
+            color: var(--warning-color);
+        }
+
+        .room-status.maintenance {
+            background-color: var(--danger-color-light);
+            color: var(--danger-color);
+        }
+
+        /* Text Colors */
+        .sidebar nav ul li a {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .sidebar nav ul li a:hover {
+            color: var(--primary-color);
+            background-color: rgba(109, 40, 217, 0.1);
+        }
+
+        .sidebar nav ul li a.active {
+            color: var(--primary-color);
+            background-color: rgba(109, 40, 217, 0.1);
+            font-weight: 600;
+        }
+
+        .user-info {
+            color: #000000;
+        }
+
+        #welcome {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .dashboard-title {
+            color: #000000;
+        }
+
+        .card-title {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .stats-value {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .stats-label {
+            color: #333333;
+        }
+
+        th {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        td {
+            color: #000000;
+        }
+
+        .section-title {
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .form-group label {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        /* Dashboard Specific Styles */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--light-bg);
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background-color: var(--light-bg);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dashboard-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .section {
+            display: none;
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge i {
+            font-size: 0.75rem;
+        }
+
+        .status-badge.paid {
+            background-color: #ECFDF5;
+            color: #065F46;
+        }
+
+        .status-badge.pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-badge.overdue {
+            background-color: #FEF2F2;
+            color: #991B1B;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .maintenance-list {
+            margin-top: 2rem;
+        }
+
+        .maintenance-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .maintenance-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .maintenance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .maintenance-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.125rem;
+        }
+
+        .maintenance-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .maintenance-status.pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .maintenance-status.in-progress {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .maintenance-status.completed {
+            background-color: #ECFDF5;
+            color: #065F46;
+        }
+
+        .maintenance-details {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .maintenance-date {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .notification {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-content {
+            color: var(--text-secondary);
+        }
+
+        .card-content p {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .form-actions .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-actions .btn i {
+            font-size: 0.875rem;
+        }
+
+        select:disabled,
+        input:disabled,
+        input:readonly {
+            background-color: var(--light-bg);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* User Profile */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        #welcome {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        #admin-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Navigation */
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            gap: 0.75rem;
+        }
+
+        .sidebar nav ul li a:hover {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar nav ul li a i {
+            font-size: 1.125rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background-color: var(--light-bg);
+        }
+
+        .data-table tr:hover {
+            background-color: var(--light-bg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                margin-bottom: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <span id="welcome">Welcome, <span id="admin-name"></span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-section="overview"><i class="fas fa-chart-line"></i> Overview</a></li>
+                    <li><a href="#" data-section="students"><i class="fas fa-users"></i> Student Management</a></li>
+                    <li><a href="#" data-section="rooms"><i class="fas fa-bed"></i> Room Management</a></li>
+                    <li><a href="#" data-section="fees"><i class="fas fa-money-bill"></i> Fee Management</a></li>
+                    <li><a href="#" data-section="maintenance"><i class="fas fa-tools"></i> Maintenance</a></li>
+                    <li><a href="#" data-section="medical"><i class="fas fa-heartbeat"></i> Medical Records</a></li>
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Admin Dashboard</h1>
+                <div class="user-profile">
+                    <div class="user-avatar" id="header-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span class="user-name" id="header-name"></span>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="section active" id="overview-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-students">0</div>
+                        <div class="stat-label">Total Students</div>
+                        </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="occupied-rooms">0</div>
+                        <div class="stat-label">Occupied Rooms</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pending-fees">₹0</div>
+                        <div class="stat-label">Pending Fees</div>
+                        </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-requests">0</div>
+                        <div class="stat-label">Active Requests</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activities</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-table-body">
+                                <tr>
+                                    <td colspan="4">Loading activities...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Management Section -->
+            <div class="section" id="students-section">
+                <h2>Student Management</h2>
+                
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="showModal('addStudentModal')">
+                        <i class="fas fa-plus"></i> Add New Student
+                    </button>
+                    <div class="search-bar">
+                        <input type="text" id="student-search" placeholder="Search students...">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Student Table -->
+                <div class="table-container">
+                    <table class="data-table" id="students-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll Number</th>
+                                <th>Email</th>
+                                <th>Room</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Student Modal -->
+            <div class="modal" id="addStudentModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Add New Student</h3>
+                        <button class="close-btn" onclick="closeModal('addStudentModal')">&times;</button>
+                    </div>
+                    <form id="addStudentForm" onsubmit="addStudent(event)">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rollNumber">Roll Number</label>
+                            <input type="text" id="rollNumber" name="rollNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="room">Room Number</label>
+                            <input type="text" id="room" name="room">
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addStudentModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Student</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Student Modal -->
+            <div class="modal" id="editStudentModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Edit Student</h3>
+                        <button class="close-btn" onclick="closeModal('editStudentModal')">&times;</button>
+                    </div>
+                    <form id="editStudentForm" onsubmit="updateStudent(event)">
+                        <input type="hidden" id="edit-student-id">
+                        <div class="form-group">
+                            <label for="edit-name">Full Name</label>
+                            <input type="text" id="edit-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-rollNumber">Roll Number</label>
+                            <input type="text" id="edit-rollNumber" name="rollNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-email">Email</label>
+                            <input type="email" id="edit-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-room">Room Number</label>
+                            <input type="text" id="edit-room" name="room">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-status">Status</label>
+                            <select id="edit-status" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('editStudentModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Student</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Room Management Section -->
+            <div class="section" id="rooms-section">
+                <h2>Room Management</h2>
+                
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="showModal('addRoomModal')">
+                        <i class="fas fa-plus"></i> Add New Room
+                    </button>
+                    <div class="search-bar">
+                        <input type="text" id="room-search" placeholder="Search rooms...">
+                        <button class="btn btn-secondary" onclick="searchRooms()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Room Status Summary -->
+                <div class="status-summary">
+                    <div class="status-card">
+                        <div class="status-value" id="total-rooms">0</div>
+                        <div class="status-label">Total Rooms</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-value" id="available-rooms">0</div>
+                        <div class="status-label">Available</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-value" id="occupied-rooms-count">0</div>
+                        <div class="status-label">Occupied</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-value" id="maintenance-rooms">0</div>
+                        <div class="status-label">Under Maintenance</div>
+                    </div>
+                </div>
+
+                <!-- Room Table -->
+                <div class="table-container">
+                    <table class="data-table" id="rooms-table">
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Type</th>
+                                <th>Capacity</th>
+                                <th>Current Occupants</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Room Modal -->
+            <div class="modal" id="addRoomModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Add New Room</h3>
+                        <button class="close-btn" onclick="closeModal('addRoomModal')">&times;</button>
+                    </div>
+                    <form id="addRoomForm" onsubmit="addRoom(event)">
+                        <div class="form-group">
+                            <label for="roomNumber">Room Number</label>
+                            <input type="text" id="roomNumber" name="roomNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="roomType">Room Type</label>
+                            <select id="roomType" name="roomType" required>
+                                <option value="Single">Single</option>
+                                <option value="Double">Double</option>
+                                <option value="Triple">Triple</option>
+                                <option value="Quad">Quad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="capacity">Capacity</label>
+                            <input type="number" id="capacity" name="capacity" min="1" max="4" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="roomStatus">Status</label>
+                            <select id="roomStatus" name="status" required>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Under Maintenance</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addRoomModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Room</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Room Modal -->
+            <div class="modal" id="editRoomModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Edit Room</h3>
+                        <button class="close-btn" onclick="closeModal('editRoomModal')">&times;</button>
+                    </div>
+                    <form id="editRoomForm" onsubmit="updateRoom(event)">
+                        <input type="hidden" id="edit-room-id">
+                        <div class="form-group">
+                            <label for="edit-roomNumber">Room Number</label>
+                            <input type="text" id="edit-roomNumber" name="roomNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-roomType">Room Type</label>
+                            <select id="edit-roomType" name="roomType" required>
+                                <option value="Single">Single</option>
+                                <option value="Double">Double</option>
+                                <option value="Triple">Triple</option>
+                                <option value="Quad">Quad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-capacity">Capacity</label>
+                            <input type="number" id="edit-capacity" name="capacity" min="1" max="4" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-roomStatus">Status</label>
+                            <select id="edit-roomStatus" name="status" required>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Under Maintenance</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('editRoomModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Room</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Fee Management Section -->
+            <div class="section" id="fees-section">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fee Management</h3>
+                        <div class="card-icon">
+                        <i class="fas fa-money-bill"></i>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search payments..." id="fee-search">
+                        <button class="btn btn-primary">Search</button>
+                        </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Paid</button>
+                        <button class="filter-btn">Pending</button>
+                        <button class="filter-btn">Overdue</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="fee-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Receipt</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fee-table-body">
+                                <tr>
+                                    <td colspan="6">Loading fee records...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Section -->
+            <div class="section" id="maintenance-section">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Maintenance Requests</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search requests..." id="maintenance-search">
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Pending</button>
+                        <button class="filter-btn">In Progress</button>
+                        <button class="filter-btn">Completed</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="maintenance-table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Student</th>
+                                    <th>Title</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="maintenance-table-body">
+                                <tr>
+                                    <td colspan="6">Loading maintenance requests...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Records Section -->
+            <div class="section" id="medical-section">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Medical Records</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search medical records..." id="medical-search">
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Active</button>
+                        <button class="filter-btn">Resolved</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="medical-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Date</th>
+                                    <th>Doctor</th>
+                                    <th>Diagnosis</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="medical-table-body">
+                                <tr>
+                                    <td colspan="6">Loading medical records...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let currentSection = 'overview';
+        let students = [];
+        let rooms = [];
+        let fees = [];
+        let maintenanceRequests = [];
+
+        // Fetch all data on load
+        async function fetchDashboardData() {
+            try {
+                // Initialize rooms if not exists
+                let rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+                if (rooms.length === 0) {
+                    rooms = initializeRooms();
+                    localStorage.setItem('rooms', JSON.stringify(rooms));
+                }
+
+                // Initialize users and fees
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const students = users.filter(user => user.userType === 'student');
+                
+                // Update dashboard stats
+                document.getElementById('total-students').textContent = students.length;
+                document.getElementById('occupied-rooms').textContent = 
+                    rooms.filter(room => room.status === 'Occupied').length;
+                document.getElementById('active-requests').textContent = 
+                    (JSON.parse(localStorage.getItem('maintenanceRequests')) || [])
+                    .filter(req => req.status !== 'Completed').length;
+
+                // Display student data if on student management section
+                if (currentSection === 'students') {
+                    displayStudentData(students);
+                }
+
+                // Load fee records
+                loadFeeRecords();
+                
+                // Update recent activities
+                updateRecentActivities();
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                showNotification('Error loading dashboard data', 'error');
+            }
+        }
+
+        function initializeRooms() {
+            const rooms = [];
+            // Create 100 rooms with different types
+            for (let i = 1; i <= 100; i++) {
+                let roomType;
+                if (i <= 40) roomType = 'Single';
+                else if (i <= 70) roomType = 'Double';
+                else roomType = 'Triple';
+
+                let status = 'Available';
+                // Set 14 rooms under maintenance (rooms 85-98)
+                if (i >= 85 && i <= 98) status = 'Maintenance';
+
+                rooms.push({
+                    roomNumber: i.toString(),
+                    roomType: roomType,
+                    capacity: roomType === 'Single' ? 1 : (roomType === 'Double' ? 2 : 3),
+                    status: status,
+                    occupants: 0,
+                    floor: Math.ceil(i/20),
+                    block: String.fromCharCode(65 + Math.floor((i-1)/25)) // A, B, C, D blocks
+                });
+            }
+            return rooms;
+        }
+
+        function loadFeeRecords() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const students = users.filter(user => user.userType === 'student');
+            const fees = JSON.parse(localStorage.getItem('fees')) || [];
+            const feeTableBody = document.getElementById('fee-table-body');
+
+            if (!feeTableBody) return;
+
+            if (students.length === 0) {
+                feeTableBody.innerHTML = '<tr><td colspan="6">No students registered</td></tr>';
+                return;
+            }
+
+            let totalPendingFees = 0;
+            const feeRows = students.map(student => {
+                const studentFee = fees.find(fee => fee.studentId === student.rollNumber) || {
+                    amount: '50000',
+                    dueDate: '2024-03-31',
+                    status: 'Pending'
+                };
+
+                if (studentFee.status === 'Pending') {
+                    totalPendingFees += parseInt(studentFee.amount);
+                }
+
+                return `
+                    <tr>
+                        <td>${student.name || 'N/A'} (${student.rollNumber})</td>
+                        <td>₹${studentFee.amount}</td>
+                        <td>${studentFee.dueDate}</td>
+                        <td>
+                            <span class="status-badge ${studentFee.status.toLowerCase()}">
+                                ${studentFee.status}
+                            </span>
+                        </td>
+                        <td>
+                            ${studentFee.status === 'Paid' ? 
+                                '<button class="btn btn-sm btn-primary" onclick="viewReceipt(\'' + student.rollNumber + '\')">View</button>' : 
+                                'N/A'}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="updateFeeStatus('${student.rollNumber}')">
+                                Update Status
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            feeTableBody.innerHTML = feeRows.join('');
+            document.getElementById('pending-fees').textContent = `₹${totalPendingFees}`;
+        }
+
+        function updateFeeStatus(studentId) {
+            const newStatus = prompt('Enter new status (Paid/Pending):', 'Paid');
+            if (!newStatus) return;
+            
+            if (!confirm(`Are you sure you want to update the fee status to ${newStatus}?`)) {
+                return;
+            }
+
+            try {
+                const fees = JSON.parse(localStorage.getItem('fees')) || [];
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const student = users.find(u => u.rollNumber === studentId);
+
+                if (!student) {
+                    throw new Error('Student not found');
+                }
+
+                const feeData = {
+                    studentId: studentId,
+                    amount: '50000',
+                    dueDate: '2024-03-31',
+                    status: newStatus,
+                    lastUpdated: new Date().toISOString()
+                };
+
+                const feeIndex = fees.findIndex(fee => fee.studentId === studentId);
+                if (feeIndex !== -1) {
+                    fees[feeIndex] = feeData;
+                } else {
+                    fees.push(feeData);
+                }
+
+                localStorage.setItem('fees', JSON.stringify(fees));
+
+                // Add to activities
+                const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                activities.unshift({
+                    time: new Date().toISOString(),
+                    description: `Fee status updated to ${newStatus} for ${student.name}`,
+                    user: student.name,
+                    status: 'success'
+                });
+                localStorage.setItem('activities', JSON.stringify(activities));
+
+                loadFeeRecords();
+                updateRecentActivities();
+                showNotification('Fee status updated successfully', 'success');
+            } catch (error) {
+                showNotification(error.message || 'Error updating fee status', 'error');
+            }
+        }
+
+        // Function to display student data in a table
+        function displayStudentData(students) {
+            const tableBody = document.querySelector('#students-table tbody');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (students.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No students registered yet</td>
+                    </tr>`;
+                return;
+            }
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name || 'N/A'}</td>
+                    <td>${student.rollNumber}</td>
+                    <td>${student.email || 'N/A'}</td>
+                    <td>${student.room || 'Not Assigned'}</td>
+                    <td><span class="status-badge ${student.status?.toLowerCase() || 'active'}">${student.status || 'Active'}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon edit" onclick="editStudent('${student.rollNumber}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="deleteStudent('${student.rollNumber}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to add a new student
+        async function addStudent(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const rollNumber = formData.get('rollNumber');
+            
+            // Validate roll number format
+            if (!validateRollNumber(rollNumber)) {
+                showNotification('Roll number must be in format 122csXXXX', 'error');
+                return;
+            }
+
+            const studentData = {
+                name: formData.get('name'),
+                rollNumber: rollNumber,
+                email: formData.get('email'),
+                room: formData.get('room'),
+                status: formData.get('status'),
+                userType: 'student',
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                if (users.some(user => user.rollNumber === rollNumber)) {
+                    throw new Error('A student with this roll number already exists');
+                }
+
+                users.push(studentData);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Add to activities
+                const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                activities.unshift({
+                    time: new Date().toISOString(),
+                    description: `New student added: ${studentData.name}`,
+                    user: studentData.name,
+                    status: 'success'
+                });
+                localStorage.setItem('activities', JSON.stringify(activities));
+
+                await fetchDashboardData();
+                closeModal('addStudentModal');
+                showNotification('Student added successfully', 'success');
+                event.target.reset();
+            } catch (error) {
+                showNotification(error.message || 'Error adding student', 'error');
+            }
+        }
+
+        // Function to edit a student
+        async function editStudent(rollNumber) {
+            const storedUsers = localStorage.getItem('users');
+            if (!storedUsers) return;
+
+            const users = JSON.parse(storedUsers);
+            const student = users.find(u => u.rollNumber === rollNumber);
+            
+            if (!student) {
+                showNotification('Student not found', 'error');
+                return;
+            }
+
+            // Populate edit form
+            document.getElementById('edit-name').value = student.name;
+            document.getElementById('edit-rollNumber').value = student.rollNumber;
+            document.getElementById('edit-room').value = student.room || '';
+            document.getElementById('edit-status').value = student.status || 'Active';
+            document.getElementById('edit-student-id').value = rollNumber;
+
+            // Show edit modal
+            showModal('editStudentModal');
+        }
+
+        // Function to update a student
+        async function updateStudent(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const rollNumber = document.getElementById('edit-student-id').value;
+            
+            try {
+                // Get existing users
+                const storedUsers = localStorage.getItem('users');
+                if (!storedUsers) throw new Error('No users found');
+
+                let users = JSON.parse(storedUsers);
+                const userIndex = users.findIndex(u => u.rollNumber === rollNumber);
+                
+                if (userIndex === -1) throw new Error('Student not found');
+
+                // Update user data
+                users[userIndex] = {
+                    ...users[userIndex],
+                    name: formData.get('name'),
+                    room: formData.get('room'),
+                    status: formData.get('status'),
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Save updated users
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Refresh dashboard
+                await fetchDashboardData();
+                
+                closeModal('editStudentModal');
+                showNotification('Student updated successfully', 'success');
+            } catch (error) {
+                showNotification(error.message || 'Error updating student', 'error');
+            }
+        }
+
+        // Function to delete a student
+        async function deleteStudent(rollNumber) {
+            if (!confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                const student = users.find(u => u.rollNumber === rollNumber);
+                
+                if (!student) {
+                    throw new Error('Student not found');
+                }
+
+                users = users.filter(u => u.rollNumber !== rollNumber);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Add to activities
+                const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                activities.unshift({
+                    time: new Date().toISOString(),
+                    description: `Student deleted: ${student.name}`,
+                    user: student.name,
+                    status: 'warning'
+                });
+                localStorage.setItem('activities', JSON.stringify(activities));
+
+                await fetchDashboardData();
+                showNotification('Student deleted successfully', 'success');
+            } catch (error) {
+                showNotification(error.message || 'Error deleting student', 'error');
+            }
+        }
+
+        // Add these utility functions
+        function validateRollNumber(rollNumber) {
+            const rollNumberPattern = /^122cs\d{4}$/i;
+            return rollNumberPattern.test(rollNumber);
+        }
+
+        function confirmAction(message) {
+            return new Promise((resolve) => {
+                const result = window.confirm(message);
+                resolve(result);
+            });
+        }
+
+        function sortTable(table, column, type = 'string') {
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                let aVal = a.cells[column].textContent.trim();
+                let bVal = b.cells[column].textContent.trim();
+                
+                if (type === 'number') {
+                    aVal = parseFloat(aVal.replace(/[^0-9.-]+/g, ""));
+                    bVal = parseFloat(bVal.replace(/[^0-9.-]+/g, ""));
+                }
+                
+                if (aVal < bVal) return -1;
+                if (aVal > bVal) return 1;
+                return 0;
+            });
+            
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Function to show notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Function to update recent activities
+        function updateRecentActivities() {
+            const activitiesContainer = document.getElementById('activity-table-body');
+            if (!activitiesContainer) return;
+
+            // Get activities from localStorage
+            const activities = JSON.parse(localStorage.getItem('activities')) || [];
+            
+            if (activities.length === 0) {
+                activitiesContainer.innerHTML = '<tr><td colspan="4">No recent activities</td></tr>';
+                return;
+            }
+
+            // Sort activities by time, most recent first
+            activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            // Display only the last 10 activities
+            const recentActivities = activities.slice(0, 10);
+
+            activitiesContainer.innerHTML = recentActivities.map(activity => `
+                <tr>
+                    <td>${new Date(activity.time).toLocaleString()}</td>
+                    <td>${activity.description}</td>
+                    <td>${activity.user}</td>
+                    <td><span class="status-badge ${activity.status}">${activity.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (!loggedInUser) {
+                window.location.replace('login.html');
+                return;
+            }
+
+            try {
+                const user = JSON.parse(loggedInUser);
+                if (!user || user.userType !== 'admin') {
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Set admin name
+                const adminName = user.name || 'Admin';
+                document.getElementById('admin-name').textContent = adminName;
+                document.getElementById('header-name').textContent = adminName;
+
+                // Initialize all data
+                fetchDashboardData();
+                fetchRoomData();
+                loadMaintenanceRequests();
+                loadFeeRecords();
+
+                // Set up navigation
+                document.querySelectorAll('.sidebar a[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                        const section = e.target.closest('a').dataset.section;
+                        showSection(section);
+                        
+                        // Refresh section data when switching
+                        if (section === 'maintenance') {
+                            loadMaintenanceRequests();
+                        } else if (section === 'rooms') {
+                            fetchRoomData();
+                        } else if (section === 'fees') {
+                            loadFeeRecords();
+                    }
+                });
+            });
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                window.location.replace('login.html');
+            }
+        });
+
+        // Function to show/hide sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.sidebar a[data-section="${sectionId}"]`).classList.add('active');
+            
+            currentSection = sectionId;
+            
+            // Fetch appropriate data based on section
+            if (sectionId === 'students') {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const students = users.filter(user => user.userType === 'student');
+                displayStudentData(students);
+            } else if (sectionId === 'rooms') {
+                fetchRoomData();
+            } else if (sectionId === 'fees') {
+                loadFeeRecords();
+            }
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Logout function
+        function handleLogout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.replace('login.html');
+        }
+
+        // Add event listener for logout
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            handleLogout();
+        });
+
+        async function fetchRoomData() {
+            try {
+                // Initialize default rooms if none exist
+                let rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+                
+                if (rooms.length === 0) {
+                    // Create 100 rooms with different types
+                    for (let i = 1; i <= 100; i++) {
+                        let roomType;
+                        if (i <= 40) roomType = 'Single';
+                        else if (i <= 70) roomType = 'Double';
+                        else roomType = 'Triple';
+
+                        let status = 'Available';
+                        // Set rooms 85-98 (14 rooms) under maintenance
+                        if (i >= 85 && i <= 98) {
+                            status = 'Maintenance';
+                        }
+                        // Set some rooms as occupied for demonstration
+                        else if (i >= 1 && i <= 20) {
+                            status = 'Occupied';
+                        }
+
+                        rooms.push({
+                            roomNumber: i.toString(),
+                            roomType: roomType,
+                            capacity: roomType === 'Single' ? 1 : (roomType === 'Double' ? 2 : 3),
+                            status: status,
+                            occupants: status === 'Occupied' ? 1 : 0,
+                            floor: Math.ceil(i/20),
+                            block: String.fromCharCode(65 + Math.floor((i-1)/25)) // A, B, C, D blocks
+                        });
+                    }
+                    localStorage.setItem('rooms', JSON.stringify(rooms));
+                }
+
+                // Calculate room statistics
+                const totalRooms = rooms.length; // Should be 100
+                const availableRooms = rooms.filter(room => room.status === 'Available').length;
+                const occupiedRooms = rooms.filter(room => room.status === 'Occupied').length;
+                const maintenanceRooms = rooms.filter(room => room.status === 'Maintenance').length;
+
+                // Update room statistics display
+                document.getElementById('total-rooms').textContent = totalRooms;
+                document.getElementById('available-rooms').textContent = availableRooms;
+                document.getElementById('occupied-rooms-count').textContent = occupiedRooms;
+                document.getElementById('maintenance-rooms').textContent = maintenanceRooms;
+
+                // Also update the overview section occupied rooms count
+                document.getElementById('occupied-rooms').textContent = occupiedRooms;
+
+                // Display rooms in table
+                displayRoomData(rooms);
+            } catch (error) {
+                console.error('Error loading room data:', error);
+                showNotification('Error loading room data', 'error');
+            }
+        }
+
+        function displayRoomData(rooms) {
+            const tableBody = document.querySelector('#rooms-table tbody');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = '';
+
+            if (rooms.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No rooms available</td>
+                    </tr>`;
+                return;
+            }
+
+            rooms.forEach(room => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${room.roomNumber}</td>
+                    <td>${room.roomType}</td>
+                    <td>${room.capacity}</td>
+                    <td>${room.occupants || 0}/${room.capacity}</td>
+                    <td><span class="room-status ${room.status.toLowerCase()}">${room.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon edit" onclick="editRoom('${room.roomNumber}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="deleteRoom('${room.roomNumber}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function addRoom(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const roomData = {
+                roomNumber: formData.get('roomNumber'),
+                roomType: formData.get('roomType'),
+                capacity: parseInt(formData.get('capacity')),
+                status: formData.get('status'),
+                occupants: 0,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // Get existing rooms
+                let rooms = [];
+                const storedRooms = localStorage.getItem('rooms');
+                if (storedRooms) {
+                    rooms = JSON.parse(storedRooms);
+                }
+
+                // Check if room number already exists
+                if (rooms.some(room => room.roomNumber === roomData.roomNumber)) {
+                    throw new Error('A room with this number already exists');
+                }
+
+                // Add new room
+                rooms.push(roomData);
+                localStorage.setItem('rooms', JSON.stringify(rooms));
+
+                // Refresh room data
+                await fetchRoomData();
+                
+                closeModal('addRoomModal');
+                showNotification('Room added successfully', 'success');
+                
+                // Clear form
+                event.target.reset();
+            } catch (error) {
+                showNotification(error.message || 'Error adding room', 'error');
+            }
+        }
+
+        async function editRoom(roomNumber) {
+            const storedRooms = localStorage.getItem('rooms');
+            if (!storedRooms) return;
+
+            const rooms = JSON.parse(storedRooms);
+            const room = rooms.find(r => r.roomNumber === roomNumber);
+            
+            if (!room) {
+                showNotification('Room not found', 'error');
+                return;
+            }
+
+            // Populate edit form
+            document.getElementById('edit-roomNumber').value = room.roomNumber;
+            document.getElementById('edit-roomType').value = room.roomType;
+            document.getElementById('edit-capacity').value = room.capacity;
+            document.getElementById('edit-roomStatus').value = room.status;
+            document.getElementById('edit-room-id').value = roomNumber;
+
+            // Show edit modal
+            showModal('editRoomModal');
+        }
+
+        async function updateRoom(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const roomNumber = document.getElementById('edit-room-id').value;
+            
+            try {
+                // Get existing rooms
+                const storedRooms = localStorage.getItem('rooms');
+                if (!storedRooms) throw new Error('No rooms found');
+
+                let rooms = JSON.parse(storedRooms);
+                const roomIndex = rooms.findIndex(r => r.roomNumber === roomNumber);
+                
+                if (roomIndex === -1) throw new Error('Room not found');
+
+                // Update room data
+                rooms[roomIndex] = {
+                    ...rooms[roomIndex],
+                    roomNumber: formData.get('roomNumber'),
+                    roomType: formData.get('roomType'),
+                    capacity: parseInt(formData.get('capacity')),
+                    status: formData.get('status'),
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Save updated rooms
+                localStorage.setItem('rooms', JSON.stringify(rooms));
+
+                // Refresh room data
+                await fetchRoomData();
+                
+                closeModal('editRoomModal');
+                showNotification('Room updated successfully', 'success');
+            } catch (error) {
+                showNotification(error.message || 'Error updating room', 'error');
+            }
+        }
+
+        async function deleteRoom(roomNumber) {
+            if (!confirm('Are you sure you want to delete this room?')) return;
+
+            try {
+                // Get existing rooms
+                const storedRooms = localStorage.getItem('rooms');
+                if (!storedRooms) throw new Error('No rooms found');
+
+                let rooms = JSON.parse(storedRooms);
+                rooms = rooms.filter(r => r.roomNumber !== roomNumber);
+
+                // Save updated rooms
+                localStorage.setItem('rooms', JSON.stringify(rooms));
+
+                // Refresh room data
+                await fetchRoomData();
+                
+                showNotification('Room deleted successfully', 'success');
+            } catch (error) {
+                showNotification(error.message || 'Error deleting room', 'error');
+            }
+        }
+
+        function searchRooms() {
+            const searchTerm = document.getElementById('room-search').value.toLowerCase();
+            const storedRooms = localStorage.getItem('rooms');
+            
+            if (!storedRooms) return;
+
+            const rooms = JSON.parse(storedRooms);
+            const filteredRooms = rooms.filter(room => 
+                room.roomNumber.toLowerCase().includes(searchTerm) ||
+                room.roomType.toLowerCase().includes(searchTerm) ||
+                room.status.toLowerCase().includes(searchTerm)
+            );
+
+            displayRoomData(filteredRooms);
+        }
+
+        // Update the maintenance requests display
+        function loadMaintenanceRequests() {
+            try {
+                const maintenanceRequests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+                const tableBody = document.getElementById('maintenance-table-body');
+                
+                if (!tableBody) return;
+                
+                if (maintenanceRequests.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6">No maintenance requests found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = maintenanceRequests.map(request => `
+                    <tr>
+                        <td>${request.id}</td>
+                        <td>${request.studentName} (${request.studentId})</td>
+                        <td>${request.title}</td>
+                        <td><span class="priority-badge ${request.priority.toLowerCase()}">${request.priority}</span></td>
+                        <td>
+                            <select class="status-select" onchange="updateRequestStatus('${request.id}', this.value)">
+                                <option value="Pending" ${request.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="In Progress" ${request.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Completed" ${request.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn-icon edit" onclick="viewRequestDetails('${request.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="deleteRequest('${request.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Update active requests count in overview
+                const activeRequests = maintenanceRequests.filter(r => r.status !== 'Completed').length;
+                document.getElementById('active-requests').textContent = activeRequests;
+            } catch (error) {
+                console.error('Error loading maintenance requests:', error);
+                showNotification('Error loading maintenance requests', 'error');
+            }
+        }
+
+        function updateRequestStatus(requestId, newStatus) {
+            try {
+                const maintenanceRequests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+                const requestIndex = maintenanceRequests.findIndex(r => r.id === requestId);
+                
+                if (requestIndex !== -1) {
+                    maintenanceRequests[requestIndex].status = newStatus;
+                    localStorage.setItem('maintenanceRequests', JSON.stringify(maintenanceRequests));
+                    
+                    // Add to recent activities
+                    const activity = {
+                        time: new Date().toISOString(),
+                        description: `Maintenance request status updated to ${newStatus}`,
+                        user: maintenanceRequests[requestIndex].studentName,
+                        status: 'completed'
+                    };
+                    
+                    const activities = JSON.parse(localStorage.getItem('activities')) || [];
+                    activities.unshift(activity);
+                    localStorage.setItem('activities', JSON.stringify(activities));
+                    
+                    loadMaintenanceRequests();
+                    updateRecentActivities();
+                    showNotification('Request status updated successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Error updating request status:', error);
+                showNotification('Error updating request status', 'error');
+            }
+        }
+
+        // Add search functionality for maintenance requests
+        function searchMaintenanceRequests(searchTerm) {
+            const requests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+            const filteredRequests = requests.filter(request => 
+                request.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                request.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                request.studentId.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            displayMaintenanceRequests(filteredRequests);
+        }
+
+        // Update the maintenance search input event listener
+        document.getElementById('maintenance-search')?.addEventListener('input', (e) => {
+            searchMaintenanceRequests(e.target.value);
+        });
+
+        // Add sort functionality to tables
+        document.querySelectorAll('th').forEach((header, index) => {
+            if (header.textContent.trim() !== 'Actions') {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    const table = header.closest('table');
+                    const type = header.textContent.includes('Amount') ? 'number' : 'string';
+                    sortTable(table, index, type);
+                });
+            }
+        });
+
+        // Add export functionality
+        function exportToCSV(data, filename) {
+            const headers = Object.keys(data[0]);
+            const csvRows = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => 
+                    JSON.stringify(row[header] || '')).join(','))
+            ];
+            
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', filename);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Add export buttons to sections
+        const exportButtons = `
+            <button class="btn btn-secondary" onclick="exportData(this.closest('.section').id)">
+                <i class="fas fa-download"></i> Export Data
+            </button>
+        `;
+
+        document.querySelectorAll('.section').forEach(section => {
+            const actionBar = section.querySelector('.action-bar');
+            if (actionBar) {
+                actionBar.insertAdjacentHTML('beforeend', exportButtons);
+            }
+        });
+
+        function exportData(sectionId) {
+            let data = [];
+            let filename = '';
+            
+            switch(sectionId) {
+                case 'students-section':
+                    data = JSON.parse(localStorage.getItem('users') || '[]')
+                        .filter(user => user.userType === 'student');
+                    filename = 'students.csv';
+                    break;
+                case 'rooms-section':
+                    data = JSON.parse(localStorage.getItem('rooms') || '[]');
+                    filename = 'rooms.csv';
+                    break;
+                case 'maintenance-section':
+                    data = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+                    filename = 'maintenance_requests.csv';
+                    break;
+                case 'fees-section':
+                    data = JSON.parse(localStorage.getItem('fees') || '[]');
+                    filename = 'fee_records.csv';
+                    break;
+            }
+            
+            if (data.length > 0) {
+                exportToCSV(data, filename);
+                showNotification('Data exported successfully', 'success');
+            } else {
+                showNotification('No data to export', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

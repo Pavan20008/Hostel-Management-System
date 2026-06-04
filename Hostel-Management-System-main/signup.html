@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Hostel Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Signup Page Styles */
+        .signup-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-bg);
+            padding: 2rem;
+        }
+
+        .signup-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .signup-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .user-type-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            background-color: var(--light-bg);
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .signup-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .signup-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .signup-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .signup-link:hover {
+            color: var(--primary-hover);
+        }
+
+        .error-message {
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .requirement i {
+            font-size: 0.75rem;
+        }
+
+        .requirement.valid {
+            color: var(--success-color);
+        }
+
+        .requirement.invalid {
+            color: var(--danger-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 1rem;
+            }
+
+            .signup-card {
+                padding: 2rem;
+            }
+
+            .signup-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1 class="signup-title">Create Account</h1>
+                <p class="signup-subtitle">Join our hostel management system</p>
+                <div class="user-type-badge" id="userTypeBadge">Student</div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rollNumber" class="form-label">Roll Number</label>
+                    <input type="text" id="rollNumber" name="rollNumber" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                    <div class="password-requirements">
+                        <div class="requirement" id="length">
+                            <i class="fas fa-times"></i>
+                            <span>At least 8 characters</span>
+                        </div>
+                        <div class="requirement" id="uppercase">
+                            <i class="fas fa-times"></i>
+                            <span>At least one uppercase letter</span>
+                        </div>
+                        <div class="requirement" id="number">
+                            <i class="fas fa-times"></i>
+                            <span>At least one number</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
+                </div>
+
+                <button type="submit" class="signup-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="signup-footer">
+                <p>Already have an account? <a href="login.html" class="signup-link">Login here</a></p>
+                <p>Not the right user type? <a href="user_selection.html" class="signup-link">Change here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get user type from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userType = urlParams.get('userType') || 'student';
+            document.getElementById('userTypeBadge').textContent = 
+                userType.charAt(0).toUpperCase() + userType.slice(1);
+
+            // Password validation
+            const passwordInput = document.getElementById('password');
+            passwordInput.addEventListener('input', validatePassword);
+
+            // Roll number validation for students
+            if (userType === 'student') {
+                const rollNumberInput = document.getElementById('rollNumber');
+                rollNumberInput.addEventListener('input', validateRollNumber);
+            }
+        });
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            
+            // Length requirement
+            const lengthValid = password.length >= 8;
+            updateRequirement('length', lengthValid);
+            
+            // Uppercase requirement
+            const uppercaseValid = /[A-Z]/.test(password);
+            updateRequirement('uppercase', uppercaseValid);
+            
+            // Number requirement
+            const numberValid = /[0-9]/.test(password);
+            updateRequirement('number', numberValid);
+        }
+
+        function updateRequirement(id, isValid) {
+            const requirement = document.getElementById(id);
+            requirement.className = `requirement ${isValid ? 'valid' : 'invalid'}`;
+            requirement.querySelector('i').className = `fas fa-${isValid ? 'check' : 'times'}`;
+        }
+
+        function validateRollNumber() {
+            const rollNumber = document.getElementById('rollNumber').value;
+            const isValid = /^122cs\d{4}$/i.test(rollNumber);
+            
+            if (!isValid) {
+                document.getElementById('rollNumber').setCustomValidity(
+                    'Roll number must be in format 122csXXXX'
+                );
+            } else {
+                document.getElementById('rollNumber').setCustomValidity('');
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            
+            try {
+                const formData = new FormData(event.target);
+                const userType = new URLSearchParams(window.location.search).get('userType') || 'student';
+                
+                // Validate passwords match
+                if (formData.get('password') !== formData.get('confirmPassword')) {
+                    showError('Passwords do not match');
+                    return;
+                }
+
+                // Initialize users array if not exists
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                // Check if user already exists
+                if (users.some(u => u.rollNumber === formData.get('rollNumber'))) {
+                    showError('A user with this roll number already exists');
+                    return;
+                }
+
+                // Create new user
+                const newUser = {
+                    name: formData.get('name'),
+                    rollNumber: formData.get('rollNumber'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    userType: userType,
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                };
+
+                // Add user to storage
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Show success message and redirect
+                showNotification('Account created successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                showError('An error occurred during signup. Please try again.');
+            }
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
